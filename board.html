@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 | 파한뿌리</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a5a64;
+            --secondary-color: #3e7a5a;
+            --bg-gray: #f8f9fa;
+            --text-main: #2d3436;
+            --text-sub: #636e72;
+            --white: #ffffff;
+            --border-color: #e9ecef;
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans KR', sans-serif; color: var(--text-main); line-height: 1.6; background-color: var(--white); }
+        a { text-decoration: none; color: inherit; }
+        li { list-style: none; }
+
+        /* Navigation - 메인페이지와 동일 스타일 */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 8%;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .nav-logo { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.3rem; color: var(--primary-color); }
+        .nav-logo img { height: 50px; object-fit: contain; }
+        
+        .nav-menu { display: flex; gap: 35px; }
+        .nav-menu a { font-weight: 500; font-size: 0.95rem; color: var(--text-sub); position: relative; }
+        .nav-menu a:hover { color: var(--secondary-color); }
+        .nav-menu a:after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px;
+            background: var(--secondary-color); transition: var(--transition);
+        }
+        .nav-menu a:hover:after { width: 100%; }
+
+        /* Main Container */
+        .container { max-width: 1100px; margin: 60px auto; padding: 0 20px; min-height: 600px; }
+
+        /* 타이틀 섹션 */
+        .section-title { text-align: center; margin-bottom: 50px; }
+        .section-title h2 { font-size: 2.2rem; color: var(--primary-color); margin-bottom: 10px; }
+        .section-title .bar { width: 50px; height: 3px; background: var(--secondary-color); margin: 0 auto; }
+
+        /* 검색 및 컨트롤 영역 */
+        .board-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: var(--bg-gray);
+            border-radius: 10px;
+        }
+        .board-info { font-size: 0.9rem; color: var(--text-sub); }
+        .board-info span { color: var(--secondary-color); font-weight: 700; }
+
+        .search-box { display: flex; gap: 8px; }
+        .search-box select, .search-box input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+        .search-btn {
+            padding: 10px 25px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .search-btn:hover { background: #34495e; }
+
+        /* 게시판 테이블 */
+        .board-table { width: 100%; border-collapse: collapse; border-top: 2px solid var(--primary-color); margin-bottom: 30px; }
+        .board-table th {
+            background: #fdfdfd;
+            padding: 18px 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        .board-table td {
+            padding: 18px 15px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--text-sub);
+        }
+        .board-table .title-cell { text-align: left; color: var(--text-main); font-weight: 400; }
+        .board-table .title-cell a:hover { color: var(--secondary-color); text-decoration: underline; }
+
+        /* 배지 스타일 */
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-right: 5px; }
+        .badge.notice { background: #fff3cd; color: #856404; }
+        .badge.reply { background: #e7f3ff; color: #007bff; }
+
+        /* 페이지네이션 */
+        .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 50px; }
+        .pagination a {
+            width: 40px; height: 40px; border: 1px solid var(--border-color);
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 5px; transition: var(--transition);
+        }
+        .pagination a.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+        .pagination a:hover:not(.active) { background: var(--bg-gray); }
+
+        /* 하단 버튼 */
+        .btn-container { text-align: right; margin-top: -50px; }
+        .write-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--secondary-color);
+            color: white;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        .write-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+        /* Footer */
+        footer { background: #2d3436; color: rgba(255,255,255,0.6); padding: 50px 8%; text-align: center; font-size: 0.9rem; margin-top: 100px; }
+
+        @media (max-width: 768px) {
+            .nav-menu, .hide-mobile { display: none; }
+            .board-controls { flex-direction: column; gap: 15px; }
+            .search-box { width: 100%; }
+            .search-box input { flex: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo">
+            <a href="index.html"><img src="파한뿌리 로고.jpg" alt="PAHANPURI Logo"></a>
+            <span>PAHANPURI</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="index.html#meaning">소개</a></li>
+            <li><a href="index.html#members">회원네트워크</a></li>
+            <li><a href="index.html#activities">활동기록</a></li>
+            <li><a href="board.html">게시판</a></li>
+            <li><a href="contact.html">문의하기</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="section-title">
+            <h2>공지사항 및 게시판</h2>
+            <div class="bar"></div>
+        </div>
+
+        <div class="board-controls">
+            <div class="board-info">
+                전체 게시글 <span>1,245</span>건
+            </div>
+            <div class="search-box">
+                <select>
+                    <option>제목</option>
+                    <option>작성자</option>
+                </select>
+                <input type="text" placeholder="검색어를 입력하세요">
+                <button class="search-btn">검색</button>
+            </div>
+        </div>
+
+        <table class="board-table">
+            <thead>
+                <tr>
+                    <th width="70">번호</th>
+                    <th class="hide-mobile" width="100">분류</th>
+                    <th>제목</th>
+                    <th width="120">작성자</th>
+                    <th class="hide-mobile" width="120">날짜</th>
+                    <th class="hide-mobile" width="80">조회</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>공지</td>
+                    <td class="hide-mobile">안내</td>
+                    <td class="title-cell">
+                        <span class="badge notice">공지</span>
+                        <a href="#">2026년 파한뿌리 신년 하례회 일정 안내</a>
+                    </td>
+                    <td>사무총장</td>
+                    <td class="hide-mobile">2026-01-28</td>
+                    <td class="hide-mobile">452</td>
+                </tr>
+                <tr>
+                    <td>1245</td>
+                    <td class="hide-mobile">활동</td>
+                    <td class="title-cell">
+                        <a href="#">이번 달 청량리 밥퍼 봉사 사진 공유합니다.</a>
+                    </td>
+                    <td>김리더</td>
+                    <td class="hide-mobile">2026-01-25</td>
+                    <td class="hide-mobile">128</td>
+                </tr>
+                <tr>
+                    <td>1244</td>
+                    <td class="hide-mobile">문의</td>
+                    <td class="title-cell">
+                        <span class="badge reply">답변완료</span>
+                        <a href="#">기부금 영수증 발급 방법이 궁금합니다.</a>
+                    </td>
+                    <td>이회원</td>
+                    <td class="hide-mobile">2026-01-22</td>
+                    <td class="hide-mobile">56</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <a href="#">&lt;</a>
+            <a href="#" class="active">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">4</a>
+            <a href="#">5</a>
+            <a href="#">&gt;</a>
+        </div>
+
+        <div class="btn-container">
+            <a href="#" class="write-btn">글쓰기</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Pahanpuri Volunteer Group. All Rights Reserved.</p>
+    </footer>
+<div id="chatbot-wrapper">
+    <div id="chatbot-window" class="hidden">
+        <div class="chatbot-header">
+            <div class="puri-face-small">
+                <div class="leaf"></div>
+                <div class="eye-left"></div>
+                <div class="eye-right"></div>
+                <div class="smile"></div>
+            </div>
+            <div class="robot-info">
+                <strong>챗봇 뿌리</strong>
+                <span>Pahanpuri Helper</span>
+            </div>
+            <button id="close-chat">&times;</button>
+        </div>
+        <div class="chatbot-messages" id="chat-messages">
+            <div class="message bot-msg">
+                안녕하세요! 파한뿌리의 전용 챗봇 <strong>"뿌리"</strong>입니다! <br>무엇을 도와드릴까요? 🌱
+            </div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="user-input" placeholder="궁금한 것을 물어보세요!">
+            <button id="send-btn">전송</button>
+        </div>
+    </div>
+
+    <button id="chatbot-launcher">
+        <div class="puri-icon">
+            <div class="puri-leaf"></div>
+            <div class="puri-body">
+                <div class="puri-eyes"></div>
+                <div class="puri-smile"></div>
+            </div>
+        </div>
+    </button>
+</div>
+
+<style>
+    /* 챗봇 전체 컨테이너 */
+    #chatbot-wrapper {
+        position: fixed; bottom: 30px; right: 30px; z-index: 9999;
+        font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    /* --- 귀여운 뿌리 아이콘 (CSS 아트) --- */
+    #chatbot-launcher {
+        width: 70px; height: 70px; border-radius: 50%;
+        background: #fff; border: 3px solid #3e7a5a;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        cursor: pointer; position: relative;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    #chatbot-launcher:hover { transform: scale(1.1) rotate(5deg); }
+
+    .puri-icon { position: relative; width: 100%; height: 100%; }
+    .puri-leaf { 
+        position: absolute; top: 5px; left: 50%; transform: translateX(-50%);
+        width: 15px; height: 20px; background: #3e7a5a;
+        border-radius: 50% 50% 0 0;
+    }
+    .puri-body {
+        position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+        width: 35px; height: 35px; background: #f0f0f0;
+        border-radius: 50% 50% 40% 40%; border: 2px solid #3e7a5a;
+    }
+    .puri-eyes {
+        position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+        width: 20px; height: 6px; display: flex; justify-content: space-between;
+    }
+    .puri-eyes::before, .puri-eyes::after {
+        content: ''; width: 6px; height: 6px; background: #2d3436; border-radius: 50%;
+        animation: blink 3s infinite;
+    }
+    .puri-smile {
+        position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%);
+        width: 12px; height: 6px; border-bottom: 2px solid #2d3436; border-radius: 0 0 10px 10px;
+    }
+
+    @keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+
+    /* --- 챗봇 창 스타일 --- */
+    #chatbot-window {
+        position: absolute; bottom: 85px; right: 0;
+        width: 320px; height: 480px; background: white;
+        border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        display: flex; flex-direction: column; overflow: hidden;
+        transition: all 0.4s ease; transform-origin: bottom right;
+    }
+    #chatbot-window.hidden { opacity: 0; transform: translateY(20px) scale(0.9); pointer-events: none; }
+
+    .chatbot-header {
+        background: #3e7a5a; color: white; padding: 15px 20px;
+        display: flex; align-items: center; gap: 12px;
+    }
+
+    /* 헤더 내 작은 뿌리 얼굴 */
+    .puri-face-small {
+        width: 35px; height: 35px; background: white; border-radius: 50%;
+        position: relative; display: flex; align-items: center; justify-content: center;
+    }
+    .puri-face-small .smile { width: 10px; height: 5px; border-bottom: 2px solid #3e7a5a; border-radius: 0 0 10px 10px; position: absolute; bottom: 8px; }
+
+    .robot-info strong { display: block; font-size: 0.95rem; }
+    .robot-info span { font-size: 0.7rem; opacity: 0.8; }
+    #close-chat { margin-left: auto; background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+
+    .chatbot-messages { flex: 1; padding: 20px; overflow-y: auto; background: #fdfdfd; display: flex; flex-direction: column; gap: 12px; }
+    .message { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 0.9rem; line-height: 1.5; }
+    .bot-msg { background: #eef5f1; color: #2d3436; border-bottom-left-radius: 4px; border: 1px solid #d1e7dd; }
+    .user-msg { background: #3e7a5a; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+
+    .chatbot-input { padding: 15px; border-top: 1px solid #eee; display: flex; gap: 8px; background: white; }
+    #user-input { flex: 1; border: 1px solid #eee; border-radius: 25px; padding: 10px 18px; outline: none; font-size: 0.9rem; }
+    #send-btn { background: #3e7a5a; color: white; border: none; border-radius: 25px; padding: 0 18px; cursor: pointer; font-weight: 600; }
+</style>
+
+<script>
+    const launcher = document.getElementById('chatbot-launcher');
+    const windowChat = document.getElementById('chatbot-window');
+    const closeBtn = document.getElementById('close-chat');
+    const sendBtn = document.getElementById('send-btn');
+    const userInput = document.getElementById('user-input');
+    const messages = document.getElementById('chat-messages');
+
+    launcher.addEventListener('click', () => { windowChat.classList.toggle('hidden'); });
+    closeBtn.addEventListener('click', () => { windowChat.classList.add('hidden'); });
+
+    function sendMessage() {
+        const text = userInput.value.trim();
+        if (text === "") return;
+
+        const userDiv = document.createElement('div');
+        userDiv.className = 'message user-msg';
+        userDiv.textContent = text;
+        messages.appendChild(userDiv);
+
+        userInput.value = "";
+        messages.scrollTop = messages.scrollHeight;
+
+        setTimeout(() => {
+            const botDiv = document.createElement('div');
+            botDiv.className = 'message bot-msg';
+            botDiv.innerHTML = "뿌리가 내용을 확인했어요! <br>잠시만 기다려주시면 답변해드릴게요. 🌱";
+            messages.appendChild(botDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }, 1000);
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+</script>
+</body>
+</html>

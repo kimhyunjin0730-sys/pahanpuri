@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>파한뿌리 | 전문직 리더들의 나눔 공동체</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a5a64; /* 조금 더 차분한 슬레이트 */
+            --secondary-color: #3e7a5a; /* 생동감 있는 딥 그린 */
+            --accent-color: #82ccdd;
+            --bg-gray: #fcfcfc;
+            --text-main: #2d3436;
+            --text-sub: #636e72;
+            --white: #ffffff;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Noto Sans KR', sans-serif; 
+            color: var(--text-main); 
+            line-height: 1.7; 
+            background-color: var(--white); 
+            word-break: keep-all;
+        }
+        a { text-decoration: none; color: inherit; transition: var(--transition); }
+        li { list-style: none; }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 8%;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .nav-logo { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.3rem; color: var(--primary-color); }
+        .nav-logo img { height: 50px; object-fit: contain; }
+        
+        .nav-menu { display: flex; gap: 35px; }
+        .nav-menu a { font-weight: 500; font-size: 0.95rem; color: var(--text-sub); position: relative; }
+        .nav-menu a:after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px;
+            background: var(--secondary-color); transition: var(--transition);
+        }
+        .nav-menu a:hover { color: var(--secondary-color); }
+        .nav-menu a:hover:after { width: 100%; }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                        url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2000'); /* 임시 고화질 이미지 */
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--white);
+            padding: 0 20px;
+        }
+        .hero-badge { 
+            background: rgba(255,255,255,0.2); 
+            padding: 5px 20px; 
+            border-radius: 30px; 
+            font-size: 0.9rem; 
+            margin-bottom: 20px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .hero h1 { font-size: clamp(2.5rem, 5vw, 3.8rem); margin-bottom: 25px; font-weight: 700; line-height: 1.2; }
+        .hero p { font-size: 1.2rem; font-weight: 300; opacity: 0.9; max-width: 700px; }
+        .hero .accent { color: var(--accent-color); }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 120px 24px; }
+
+        /* Section Title */
+        .section-title { text-align: center; margin-bottom: 70px; }
+        .section-title span { color: var(--secondary-color); font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; }
+        .section-title h2 { font-size: 2.4rem; color: var(--primary-color); margin-top: 10px; }
+        .section-title .bar { width: 40px; height: 4px; background: var(--secondary-color); margin: 20px auto; border-radius: 2px; }
+
+        /* Meaning Section */
+        .meaning-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 60px; align-items: center; }
+        .meaning-content { padding-right: 20px; }
+        .meaning-content blockquote { 
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem; 
+            color: var(--secondary-color);
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .meaning-content p { color: var(--text-sub); font-size: 1.1rem; line-height: 2; }
+
+        /* Member Cards */
+        .member-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; }
+        .member-card { 
+            background: var(--white); 
+            padding: 40px 20px; 
+            border-radius: 20px; 
+            text-align: center; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            border: 1px solid #f0f0f0;
+            transition: var(--transition);
+        }
+        .member-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: var(--secondary-color); }
+        .member-card .role { font-size: 0.75rem; color: var(--secondary-color); font-weight: 800; margin-bottom: 15px; display: block; letter-spacing: 1px; }
+        .member-card strong { font-size: 1.3rem; display: block; margin-bottom: 8px; color: var(--primary-color); }
+        .member-card .work { font-size: 0.9rem; color: var(--text-sub); }
+
+        /* Activity Cards */
+        .activity-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .activity-card { background: var(--white); border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: var(--transition); }
+        .activity-card:hover { transform: scale(1.02); }
+        .activity-card .img-box { height: 250px; overflow: hidden; }
+        .activity-card img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); }
+        .activity-card:hover img { transform: scale(1.1); }
+        .activity-info { padding: 30px; }
+        .activity-info h3 { font-size: 1.25rem; margin-bottom: 12px; color: var(--primary-color); }
+        .activity-info p { font-size: 0.95rem; color: var(--text-sub); }
+
+        /* Info Box */
+        .info-panel { 
+            background: var(--primary-color); 
+            color: var(--white); 
+            padding: 60px; 
+            border-radius: 30px; 
+            display: grid;
+            grid-template-columns: 1fr 1px 1fr;
+            gap: 40px;
+            align-items: center;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .info-panel h3 { margin-bottom: 15px; font-size: 1.5rem; color: var(--accent-color); }
+        .info-panel p { font-size: 1.1rem; opacity: 0.9; }
+
+        /* Common Button */
+        .btn-more {
+            display: inline-block;
+            padding: 14px 45px;
+            background: var(--primary-color);
+            color: var(--white);
+            border-radius: 50px;
+            font-weight: 600;
+            margin-top: 40px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .btn-more:hover { background: var(--secondary-color); transform: translateY(-3px); }
+
+        /* Footer */
+        footer { background: #1e272e; color: rgba(255,255,255,0.5); padding: 80px 8% 40px; }
+        .footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 50px; }
+        .footer-logo img { height: 50px; margin-bottom: 20px; filter: grayscale(1) brightness(2); }
+        .footer-bottom { text-align: center; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 30px; }
+
+        @media (max-width: 992px) {
+            .member-grid { grid-template-columns: repeat(2, 1fr); }
+            .activity-grid { grid-template-columns: repeat(2, 1fr); }
+            .meaning-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+            .info-panel { grid-template-columns: 1fr; padding: 40px 20px; }
+            .info-panel div:nth-child(2) { display: none; }
+            .member-grid, .activity-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo">
+            <img src="logo_1.png" alt="PAHANPURI Logo">
+            <span>PAHANPURI</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="#meaning">소개</a></li>
+            <li><a href="members.html">회원네트워크</a></li>
+            <li><a href="#activities">활동기록</a></li>
+            <li><a href="board.html">게시판</a></li>
+            <li><a href="contact.html">문의하기</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-badge">Professional Leaders Community</div>
+        <h1>파한뿌리 봉사모임은<br><span class="accent">작은 선행</span>의 기적을 믿습니다</h1>
+        <p>사회 각계의 리더들이 모여 가장 낮은 곳으로 따뜻한 손길을 전하는<br>실천적 선행 공동체입니다.</p>
+    </header>
+
+    <div class="container">
+        
+        <section id="meaning">
+            <div class="section-title">
+                <span>Philosophy</span>
+                <h2>의미 및 취지</h2>
+                <div class="bar"></div>
+            </div>
+            <div class="meaning-grid">
+                <div class="meaning-content">
+                    <blockquote>
+                        "평생 인색했던 노파가 단 한 번 베푼 ‘파 한 뿌리’의 작은 선행으로 구원의 기회를 얻는다."
+                    </blockquote>
+                    <p>도스토옙스키의 소설 『까라마조프의 형제들』에서 영감을 얻은 <strong>파한뿌리</strong>는 2024년 설립되었습니다. 우리는 거창한 구호보다 지금 당장 내미는 작은 손길의 가치를 믿으며, 네팔과 국내 소외계층을 위해 마음을 모읍니다.</p>
+                </div>
+                <div class="meaning-stats">
+                    <img src="image header.jpg" style="width:100%; border-radius:30px; box-shadow: 20px 20px 60px #d9d9d9;" alt="Charity">
+                </div>
+            </div>
+        </section>
+
+        <section id="members">
+            <div class="section-title">
+                <span>Our Leaders</span>
+                <h2>주요 리더 정보</h2>
+                <div class="bar"></div>
+            </div>
+            <div class="member-grid">
+                <div class="member-card">
+                    <span class="role">Secretary General</span>
+                    <strong>소혜림</strong>
+                    <p class="work">변호사 / 법률 자문</p>
+                </div>
+                <div class="member-card">
+                    <span class="role">Executive Member</span>
+                    <strong>홍길동</strong>
+                    <p class="work">OOO 코퍼레이션 대표</p>
+                </div>
+                <div class="member-card">
+                    <span class="role">Medical Advisor</span>
+                    <strong>김영희</strong>
+                    <p class="work">OO 내과 원장</p>
+                </div>
+                <div class="member-card">
+                    <span class="role">Strategy Director</span>
+                    <strong>이철수</strong>
+                    <p class="work">회계사 / 전략 기획</p>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <a href="members.html" class="btn-more">회원 전체보기 (90+)</a>
+            </div>
+        </section>
+
+        <section id="activities">
+            <div class="section-title">
+                <span>Activities</span>
+                <h2>최근 봉사 내역</h2>
+                <div class="bar"></div>
+            </div>
+            <div class="activity-grid">
+                <div class="activity-card">
+                    <div class="img-box"><img src="https://images.unsplash.com/photo-1524062731293-8971abb2a2ad?q=80&w=400"></div>
+                    <div class="activity-info">
+                        <h3>네팔 고아원 후원</h3>
+                        <p>지진 피해 지역 아동들을 위해 매달 정기적인 교육비와 식사비를 지원합니다.</p>
+                    </div>
+                </div>
+                <div class="activity-card">
+                    <div class="img-box"><img src="https://images.unsplash.com/photo-1594708767771-a7502209ff51?q=80&w=400"></div>
+                    <div class="activity-info">
+                        <h3>청량리 밥퍼 봉사</h3>
+                        <p>다일공동체와 협력하여 이웃들에게 따뜻한 한 끼를 대접하는 급식 봉사입니다.</p>
+                    </div>
+                </div>
+                <div class="activity-card">
+                    <div class="img-box"><img src="https://images.unsplash.com/photo-1518391846015-55a9cc003b25?q=80&w=400"></div>
+                    <div class="activity-info">
+                        <h3>사랑의 연탄 나눔</h3>
+                        <p>추운 겨울, 에너지 취약계층의 따뜻한 겨울나기를 위해 매년 마음을 배달합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="info-panel" id="meetings">
+            <div>
+                <h3>정기 모임 일정</h3>
+                <p>홀수 달 세 번째 목요일 저녁</p>
+                <small style="opacity: 0.7;">다음 모임: 2026년 3월 19일</small>
+            </div>
+            <div style="background: rgba(255,255,255,0.2); width: 1px; height: 80px;"></div>
+            <div>
+                <h3>후원 계좌 안내</h3>
+                <p>카카오뱅크 33333-1756-8825</p>
+                <p>예금주: 소혜림 (월 10,000원)</p>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="footer-top">
+            <div class="footer-logo">
+                <img src="logo_1.png" alt="Footer Logo">
+                <p style="margin-top: 10px;">작은 선행이 만드는 큰 기적, 파한뿌리</p>
+            </div>
+            <div style="text-align: right;">
+                <p>서울시 동대문구 청량리동 (청량리 밥퍼 인근)</p>
+                <p>Email: contact@pahanpuri.org</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 Pahanpuri Volunteer Group. All Rights Reserved.
+        </div>
+    </footer>
+<div id="chatbot-wrapper">
+    <div id="chatbot-window" class="hidden">
+        <div class="chatbot-header">
+            <div class="puri-face-small">
+                <div class="leaf"></div>
+                <div class="eye-left"></div>
+                <div class="eye-right"></div>
+                <div class="smile"></div>
+            </div>
+            <div class="robot-info">
+                <strong>챗봇 뿌리</strong>
+                <span>Pahanpuri Helper</span>
+            </div>
+            <button id="close-chat">&times;</button>
+        </div>
+        <div class="chatbot-messages" id="chat-messages">
+            <div class="message bot-msg">
+                안녕하세요! 파한뿌리의 전용 챗봇 <strong>"뿌리"</strong>입니다! <br>무엇을 도와드릴까요? 🌱
+            </div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="user-input" placeholder="궁금한 것을 물어보세요!">
+            <button id="send-btn">전송</button>
+        </div>
+    </div>
+
+    <button id="chatbot-launcher">
+        <div class="puri-icon">
+            <div class="puri-leaf"></div>
+            <div class="puri-body">
+                <div class="puri-eyes"></div>
+                <div class="puri-smile"></div>
+            </div>
+        </div>
+    </button>
+</div>
+
+<style>
+    /* 챗봇 전체 컨테이너 */
+    #chatbot-wrapper {
+        position: fixed; bottom: 30px; right: 30px; z-index: 9999;
+        font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    /* --- 귀여운 뿌리 아이콘 (CSS 아트) --- */
+    #chatbot-launcher {
+        width: 70px; height: 70px; border-radius: 50%;
+        background: #fff; border: 3px solid #3e7a5a;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        cursor: pointer; position: relative;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    #chatbot-launcher:hover { transform: scale(1.1) rotate(5deg); }
+
+    .puri-icon { position: relative; width: 100%; height: 100%; }
+    .puri-leaf { 
+        position: absolute; top: 5px; left: 50%; transform: translateX(-50%);
+        width: 15px; height: 20px; background: #3e7a5a;
+        border-radius: 50% 50% 0 0;
+    }
+    .puri-body {
+        position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+        width: 35px; height: 35px; background: #f0f0f0;
+        border-radius: 50% 50% 40% 40%; border: 2px solid #3e7a5a;
+    }
+    .puri-eyes {
+        position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+        width: 20px; height: 6px; display: flex; justify-content: space-between;
+    }
+    .puri-eyes::before, .puri-eyes::after {
+        content: ''; width: 6px; height: 6px; background: #2d3436; border-radius: 50%;
+        animation: blink 3s infinite;
+    }
+    .puri-smile {
+        position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%);
+        width: 12px; height: 6px; border-bottom: 2px solid #2d3436; border-radius: 0 0 10px 10px;
+    }
+
+    @keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+
+    /* --- 챗봇 창 스타일 --- */
+    #chatbot-window {
+        position: absolute; bottom: 85px; right: 0;
+        width: 320px; height: 480px; background: white;
+        border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        display: flex; flex-direction: column; overflow: hidden;
+        transition: all 0.4s ease; transform-origin: bottom right;
+    }
+    #chatbot-window.hidden { opacity: 0; transform: translateY(20px) scale(0.9); pointer-events: none; }
+
+    .chatbot-header {
+        background: #3e7a5a; color: white; padding: 15px 20px;
+        display: flex; align-items: center; gap: 12px;
+    }
+
+    /* 헤더 내 작은 뿌리 얼굴 */
+    .puri-face-small {
+        width: 35px; height: 35px; background: white; border-radius: 50%;
+        position: relative; display: flex; align-items: center; justify-content: center;
+    }
+    .puri-face-small .smile { width: 10px; height: 5px; border-bottom: 2px solid #3e7a5a; border-radius: 0 0 10px 10px; position: absolute; bottom: 8px; }
+
+    .robot-info strong { display: block; font-size: 0.95rem; }
+    .robot-info span { font-size: 0.7rem; opacity: 0.8; }
+    #close-chat { margin-left: auto; background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+
+    .chatbot-messages { flex: 1; padding: 20px; overflow-y: auto; background: #fdfdfd; display: flex; flex-direction: column; gap: 12px; }
+    .message { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 0.9rem; line-height: 1.5; }
+    .bot-msg { background: #eef5f1; color: #2d3436; border-bottom-left-radius: 4px; border: 1px solid #d1e7dd; }
+    .user-msg { background: #3e7a5a; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+
+    .chatbot-input { padding: 15px; border-top: 1px solid #eee; display: flex; gap: 8px; background: white; }
+    #user-input { flex: 1; border: 1px solid #eee; border-radius: 25px; padding: 10px 18px; outline: none; font-size: 0.9rem; }
+    #send-btn { background: #3e7a5a; color: white; border: none; border-radius: 25px; padding: 0 18px; cursor: pointer; font-weight: 600; }
+</style>
+
+<script>
+    const launcher = document.getElementById('chatbot-launcher');
+    const windowChat = document.getElementById('chatbot-window');
+    const closeBtn = document.getElementById('close-chat');
+    const sendBtn = document.getElementById('send-btn');
+    const userInput = document.getElementById('user-input');
+    const messages = document.getElementById('chat-messages');
+
+    launcher.addEventListener('click', () => { windowChat.classList.toggle('hidden'); });
+    closeBtn.addEventListener('click', () => { windowChat.classList.add('hidden'); });
+
+    function sendMessage() {
+        const text = userInput.value.trim();
+        if (text === "") return;
+
+        const userDiv = document.createElement('div');
+        userDiv.className = 'message user-msg';
+        userDiv.textContent = text;
+        messages.appendChild(userDiv);
+
+        userInput.value = "";
+        messages.scrollTop = messages.scrollHeight;
+
+        setTimeout(() => {
+            const botDiv = document.createElement('div');
+            botDiv.className = 'message bot-msg';
+            botDiv.innerHTML = "뿌리가 내용을 확인했어요! <br>잠시만 기다려주시면 답변해드릴게요. 🌱";
+            messages.appendChild(botDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }, 1000);
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+</script>
+</body>
+</html>

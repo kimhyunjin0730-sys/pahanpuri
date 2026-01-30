@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원네트워크 | 파한뿌리</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a5a64;
+            --secondary-color: #3e7a5a;
+            --bg-gray: #f8f9fa;
+            --text-main: #2d3436;
+            --text-sub: #636e72;
+            --white: #ffffff;
+            --border-color: #e9ecef;
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans KR', sans-serif; color: var(--text-main); line-height: 1.6; background: #fff; }
+        a { text-decoration: none; color: inherit; }
+
+        /* Navigation */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 0 8%; height: 90px; background: rgba(255, 255, 255, 0.95); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .nav-logo { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.3rem; color: var(--primary-color); }
+        .nav-logo img { height: 50px; }
+        .nav-menu { display: flex; gap: 35px; }
+        .nav-menu a:hover { color: var(--secondary-color); }
+
+        /* Container */
+        .container { max-width: 1100px; margin: 60px auto; padding: 0 20px; }
+        .section-title { text-align: center; margin-bottom: 50px; }
+        .section-title h2 { font-size: 2.2rem; color: var(--primary-color); margin-bottom: 10px; }
+        .section-title .bar { width: 50px; height: 3px; background: var(--secondary-color); margin: 0 auto; }
+
+        /* Member Grid */
+        .member-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .member-card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            cursor: pointer;
+            text-align: center;
+            padding-bottom: 20px;
+        }
+        .member-card:hover { transform: translateY(-10px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-color: var(--secondary-color); }
+
+        .member-img {
+            width: 100%; height: 200px; background: #f1f3f5;
+            display: flex; align-items: center; justify-content: center; font-size: 3.5rem;
+        }
+        .member-info { padding: 20px 15px; }
+        .member-info h3 { font-size: 1.2rem; margin-bottom: 5px; color: var(--primary-color); }
+        .member-info p { font-size: 0.9rem; color: var(--secondary-color); font-weight: 500; }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: none; justify-content: center; align-items: center;
+            z-index: 2000; padding: 20px;
+        }
+        .modal-content {
+            background: white; width: 100%; max-width: 550px;
+            padding: 40px; border-radius: 20px; position: relative;
+            animation: fadeIn 0.3s ease; max-height: 90vh; overflow-y: auto;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .close-modal { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; color: var(--text-sub); }
+        
+        .modal-header { text-align: center; margin-bottom: 30px; }
+        .modal-img-circle { width: 90px; height: 90px; background: var(--bg-gray); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border: 3px solid var(--secondary-color); }
+        .modal-name { font-size: 1.6rem; color: var(--primary-color); margin-bottom: 5px; }
+        .modal-job { color: var(--secondary-color); font-weight: 600; font-size: 1rem; }
+
+        .info-section { margin-top: 25px; }
+        .info-title { 
+            font-weight: 700; color: var(--primary-color); 
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px; margin-bottom: 12px; font-size: 1.05rem;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .info-list { list-style: none; }
+        .info-list li { font-size: 0.95rem; margin-bottom: 8px; color: var(--text-main); position: relative; padding-left: 18px; line-height: 1.5; }
+        .info-list li::before { content: '•'; position: absolute; left: 0; color: var(--secondary-color); font-weight: bold; }
+        
+        .tech-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
+        .tag { background: #eef5f1; color: var(--secondary-color); padding: 5px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; border: 1px solid rgba(62, 122, 90, 0.1); }
+
+        footer { background: #2d3436; color: rgba(255,255,255,0.6); padding: 50px 8%; text-align: center; margin-top: 100px; }
+
+        @media (max-width: 768px) { .nav-menu { display: none; } .modal-content { padding: 30px 20px; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo">
+            <a href="index.html"><img src="파한뿌리 로고.jpg" alt="Logo"></a>
+            <span>PAHANPURI</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="index.html#meaning">소개</a></li>
+            <li><a href="members.html">회원네트워크</a></li>
+            <li><a href="board.html">게시판</a></li>
+            <li><a href="contact.html">문의하기</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="section-title">
+            <h2>회원 네트워크</h2>
+            <div class="bar"></div>
+            <p>파한뿌리와 함께하는 각 분야의 전문 리더들을 소개합니다.</p>
+        </div>
+
+        <div class="member-grid">
+            <div class="member-card" onclick="openMemberModal('DDEV (김현우)', 'Software Architect / Backend Engineer', 
+                ['클라우드 기반 대용량 데이터 처리 시스템 설계', 'AI 기반 자동화 봇 및 인터랙티브 웹 서비스 개발', '오픈소스 프로젝트 컨트리뷰션 및 아키텍처 컨설팅'],
+                ['Node.js', 'TypeScript', 'Docker', 'AWS', 'Kubernetes', 'PostgreSQL'],
+                ['현재: Freelance Software Architect', '전: 테크 스타트업 리드 개발자', '오픈소스 커뮤니티 활성 멤버'], '💻')">
+                <div class="member-img">💻</div>
+                <div class="member-info">
+                    <h3>DDEV</h3>
+                    <p>Software Architect</p>
+                </div>
+            </div>
+
+            <div class="member-card" onclick="openMemberModal('이승민', 'Full Stack Developer', 
+                ['파한뿌리 통합 봉사 관리 시스템 구축', '실시간 채팅 기반 매칭 알고리즘 최적화', '반응형 웹 UI/UX 디자인 가이드라인 수립'],
+                ['React', 'Next.js', 'Spring Boot', 'MySQL', 'Redis'],
+                ['파한뿌리 IT 기술 지원팀장', '전: IT 솔루션 기업 시니어 개발자', '웹 표준 기술 전문가'], '🚀')">
+                <div class="member-img">🚀</div>
+                <div class="member-info">
+                    <h3>이승민</h3>
+                    <p>Full Stack Developer</p>
+                </div>
+            </div>
+
+            <div class="member-card" onclick="openMemberModal('김한결', '의료/외과 전문의', 
+                ['동남아 오지 의료 환경 개선 프로젝트 총괄', '원격 의료 자문 시스템 도입 및 운영', '긴급 구호 의료팀 교육 메뉴얼 제작'],
+                ['Emergency Medicine', 'Surgical Planning', 'Healthcare Management'],
+                ['종합병원 외과 전문의 (20년)', '국제 의료 봉사단 분과장', '보건복지부 장관 표창 수상'], '👨‍⚕️')">
+                <div class="member-img">👨‍⚕️</div>
+                <div class="member-info">
+                    <h3>김한결</h3>
+                    <p>의료/외과 전문의</p>
+                </div>
+            </div>
+
+            <div class="member-card" onclick="openMemberModal('이서연', '변호사 / 법률자문', 
+                ['비영리 단체 투명성 강화 법률 가이드라인 수립', '사회적 기업 설립 및 운영 법률 자문', '국제 봉사 활동 위험 관리 컴플라이언스 설계'],
+                ['Civil Law', 'Corporate Law', 'Risk Management'],
+                ['법무법인 파트너 변호사', '대한변협 인권위원회 위원', 'NPO 법률 지원단 자문위원'], '👩‍⚖️')">
+                <div class="member-img">👩‍⚖️</div>
+                <div class="member-info">
+                    <h3>이서연</h3>
+                    <p>변호사</p>
+                </div>
+            </div>
+
+            <div class="member-card" onclick="openMemberModal('최유진', '교육 기획가', 
+                ['아동 정서 발달을 위한 창의력 커리큘럼 개발', '온라인 교육 플랫폼 콘텐츠 기획', '교사 역량 강화 워크숍 프로그램 운영'],
+                ['Curriculum Design', 'Educational Tech', 'Psychology'],
+                ['교육 컨설팅 대표', '전: 사립 교육 기관 프로그램 디렉터', '아동 교육학 박사'], '📚')">
+                <div class="member-img">📚</div>
+                <div class="member-info">
+                    <h3>최유진</h3>
+                    <p>교육 기획가</p>
+                </div>
+            </div>
+
+            <div class="member-card" onclick="openMemberModal('정현우', '건축사', 
+                ['친환경 모듈러 하우스 학교 건축 설계', '낙후 지역 커뮤니티 센터 리노베이션', '지속 가능한 도시 재생 프로젝트 참여'],
+                ['Architectural Design', 'Sustainable Building', 'CAD/BIM'],
+                ['건축사무소 소장', '도시 재생 전문 위원', '한국건축가협회 정회원'], '🏗️')">
+                <div class="member-img">🏗️</div>
+                <div class="member-info">
+                    <h3>정현우</h3>
+                    <p>건축사</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="memberModal" class="modal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModal(event)">&times;</span>
+            
+            <div class="modal-header">
+                <div class="modal-img-circle" id="modalImg">👤</div>
+                <h3 class="modal-name" id="modalName">이름</h3>
+                <p class="modal-job" id="modalJob">직업</p>
+            </div>
+
+            <div class="info-section">
+                <div class="info-title">🚀 주요 프로젝트</div>
+                <ul class="info-list" id="modalProjects"></ul>
+            </div>
+
+            <div class="info-section">
+                <div class="info-title">🛠 기술 스택 / 전문성</div>
+                <div class="tech-tags" id="modalTech"></div>
+            </div>
+
+            <div class="info-section">
+                <div class="info-title">💼 주요 경력</div>
+                <ul class="info-list" id="modalExperience"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="chatbot-wrapper">
+        <div id="chatbot-window" class="hidden">
+            <div class="chatbot-header">
+                <div class="puri-face-small">
+                    <div class="smile" style="width:10px; height:5px; border-bottom:2px solid #3e7a5a; border-radius:0 0 10px 10px; position:absolute; bottom:8px;"></div>
+                </div>
+                <div class="robot-info">
+                    <strong>챗봇 뿌리</strong>
+                    <span>Pahanpuri Helper</span>
+                </div>
+                <button id="close-chat" style="margin-left:auto; background:none; border:none; color:white; font-size:24px; cursor:pointer;">&times;</button>
+            </div>
+            <div class="chatbot-messages" id="chat-messages">
+                <div class="message bot-msg">안녕하세요! 파한뿌리 챗봇 <strong>"뿌리"</strong>입니다! <br>무엇을 도와드릴까요? 🌱</div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="user-input" placeholder="질문을 입력하세요...">
+                <button id="send-btn">전송</button>
+            </div>
+        </div>
+        <button id="chatbot-launcher">
+            <div class="puri-icon">
+                <div class="puri-leaf" style="position:absolute; top:5px; left:50%; transform:translateX(-50%); width:15px; height:20px; background:#3e7a5a; border-radius:50% 50% 0 0;"></div>
+                <div class="puri-body" style="position:absolute; bottom:10px; left:50%; transform:translateX(-50%); width:35px; height:35px; background:#f0f0f0; border-radius:50%; border:2px solid #3e7a5a;">
+                    <div style="position:absolute; top:10px; left:7px; width:6px; height:6px; background:#2d3436; border-radius:50%;"></div>
+                    <div style="position:absolute; top:10px; right:7px; width:6px; height:6px; background:#2d3436; border-radius:50%;"></div>
+                    <div style="position:absolute; bottom:6px; left:50%; transform:translateX(-50%); width:12px; height:6px; border-bottom:2px solid #2d3436; border-radius:0 0 10px 10px;"></div>
+                </div>
+            </div>
+        </button>
+    </div>
+
+    <style>
+        /* Chatbot Style Updates */
+        #chatbot-launcher { width: 70px; height: 70px; border-radius: 50%; background: #fff; border: 3px solid #3e7a5a; box-shadow: 0 8px 20px rgba(0,0,0,0.15); cursor: pointer; position: relative; transition: all 0.3s ease; }
+        #chatbot-launcher:hover { transform: scale(1.1); }
+        #chatbot-window { position: absolute; bottom: 85px; right: 0; width: 320px; height: 450px; background: white; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); display: flex; flex-direction: column; overflow: hidden; transition: 0.3s; }
+        #chatbot-window.hidden { opacity: 0; transform: translateY(20px); pointer-events: none; }
+        .chatbot-header { background: #3e7a5a; color: white; padding: 15px; display: flex; align-items: center; gap: 10px; }
+        .puri-face-small { width: 30px; height: 30px; background: white; border-radius: 50%; position: relative; }
+        .chatbot-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fdfdfd; }
+        .message { padding: 10px 14px; border-radius: 15px; font-size: 0.9rem; max-width: 85%; }
+        .bot-msg { background: #eef5f1; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .user-msg { background: #3e7a5a; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .chatbot-input { padding: 10px; border-top: 1px solid #eee; display: flex; gap: 5px; }
+        #user-input { flex: 1; border: 1px solid #eee; border-radius: 20px; padding: 8px 15px; outline: none; }
+        #send-btn { background: #3e7a5a; color: white; border: none; border-radius: 20px; padding: 0 15px; cursor: pointer; }
+    </style>
+
+    <footer>
+        <p>© 2026 Pahanpuri Volunteer Group. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Modal Logic
+        function openMemberModal(name, job, projects, tech, exp, emoji) {
+            document.getElementById('modalName').innerText = name;
+            document.getElementById('modalJob').innerText = job;
+            document.getElementById('modalImg').innerText = emoji;
+
+            const projectList = document.getElementById('modalProjects');
+            projectList.innerHTML = projects.map(p => `<li>${p}</li>`).join('');
+
+            const techBox = document.getElementById('modalTech');
+            techBox.innerHTML = tech.map(t => `<span class="tag">${t}</span>`).join('');
+
+            const expList = document.getElementById('modalExperience');
+            expList.innerHTML = exp.map(e => `<li>${e}</li>`).join('');
+
+            document.getElementById('memberModal').style.display = 'flex';
+        }
+
+        function closeModal(event) {
+            document.getElementById('memberModal').style.display = 'none';
+        }
+
+        // Chatbot Logic
+        const launcher = document.getElementById('chatbot-launcher');
+        const windowChat = document.getElementById('chatbot-window');
+        const closeChat = document.getElementById('close-chat');
+        const sendBtn = document.getElementById('send-btn');
+        const userInput = document.getElementById('user-input');
+        const messages = document.getElementById('chat-messages');
+
+        launcher.addEventListener('click', () => windowChat.classList.toggle('hidden'));
+        closeChat.addEventListener('click', () => windowChat.classList.add('hidden'));
+
+        function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user-msg';
+            userDiv.textContent = text;
+            messages.appendChild(userDiv);
+            userInput.value = "";
+
+            setTimeout(() => {
+                const botDiv = document.createElement('div');
+                botDiv.className = 'message bot-msg';
+                botDiv.innerHTML = "뿌리가 내용을 확인했어요! <br>곧 답변해 드릴게요. 🌱";
+                messages.appendChild(botDiv);
+                messages.scrollTop = messages.scrollHeight;
+            }, 800);
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') sendMessage(); });
+    </script>
+</body>
+</html>
