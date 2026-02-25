@@ -22,7 +22,6 @@
         a { text-decoration: none; color: inherit; }
         li { list-style: none; }
 
-        /* Navigation - 메인페이지와 동일 스타일 */
         nav {
             display: flex;
             justify-content: space-between;
@@ -51,12 +50,10 @@
         /* Main Container */
         .container { max-width: 1100px; margin: 60px auto; padding: 0 20px; min-height: 600px; }
 
-        /* 타이틀 섹션 */
         .section-title { text-align: center; margin-bottom: 50px; }
         .section-title h2 { font-size: 2.2rem; color: var(--primary-color); margin-bottom: 10px; }
         .section-title .bar { width: 50px; height: 3px; background: var(--secondary-color); margin: 0 auto; }
 
-        /* 검색 및 컨트롤 영역 */
         .board-controls {
             display: flex;
             justify-content: space-between;
@@ -88,7 +85,6 @@
         }
         .search-btn:hover { background: #34495e; }
 
-        /* 게시판 테이블 */
         .board-table { width: 100%; border-collapse: collapse; border-top: 2px solid var(--primary-color); margin-bottom: 30px; }
         .board-table th {
             background: #fdfdfd;
@@ -107,12 +103,10 @@
         .board-table .title-cell { text-align: left; color: var(--text-main); font-weight: 400; }
         .board-table .title-cell a:hover { color: var(--secondary-color); text-decoration: underline; }
 
-        /* 배지 스타일 */
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-right: 5px; }
         .badge.notice { background: #fff3cd; color: #856404; }
         .badge.reply { background: #e7f3ff; color: #007bff; }
 
-        /* 페이지네이션 */
         .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 50px; }
         .pagination a {
             width: 40px; height: 40px; border: 1px solid var(--border-color);
@@ -122,7 +116,6 @@
         .pagination a.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
         .pagination a:hover:not(.active) { background: var(--bg-gray); }
 
-        /* 하단 버튼 */
         .btn-container { text-align: right; margin-top: -50px; }
         .write-btn {
             display: inline-block;
@@ -285,13 +278,11 @@
 </div>
 
 <style>
-    /* 챗봇 전체 컨테이너 */
     #chatbot-wrapper {
         position: fixed; bottom: 30px; right: 30px; z-index: 9999;
         font-family: 'Noto Sans KR', sans-serif;
     }
 
-    /* --- 귀여운 뿌리 아이콘 (CSS 아트) --- */
     #chatbot-launcher {
         width: 70px; height: 70px; border-radius: 50%;
         background: #fff; border: 3px solid #3e7a5a;
@@ -327,7 +318,6 @@
 
     @keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
 
-    /* --- 챗봇 창 스타일 --- */
     #chatbot-window {
         position: absolute; bottom: 85px; right: 0;
         width: 320px; height: 480px; background: white;
@@ -342,7 +332,6 @@
         display: flex; align-items: center; gap: 12px;
     }
 
-    /* 헤더 내 작은 뿌리 얼굴 */
     .puri-face-small {
         width: 35px; height: 35px; background: white; border-radius: 50%;
         position: relative; display: flex; align-items: center; justify-content: center;
@@ -399,4 +388,5 @@
     userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
 </script>
 </body>
+
 </html>
